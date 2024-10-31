@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
+import { fromEvent, Subscription } from 'rxjs';
 import { SUGGESTED_HASHTAGS } from '../../constants/hashtags.constants';
 import { HashtagSuggestionsComponent } from '../hashtag-suggestions/hashtag-suggestions.component';
 
@@ -12,13 +13,15 @@ import { HashtagSuggestionsComponent } from '../hashtag-suggestions/hashtag-sugg
   templateUrl: './hashtag-input.component.html',
   styleUrl: './hashtag-input.component.css',
 })
-export class HashtagInputComponent implements OnInit, OnDestroy {
+export class HashtagInputComponent implements OnInit, OnDestroy, AfterViewInit {
   private editor: Editor;
   showSuggestions = false;
   filteredTags: string[] = [];
 
   private availableTags = SUGGESTED_HASHTAGS;
   private selectedTags: string[] = [];
+
+  private editorClickSubscription: Subscription;
 
   ngOnInit() {
     this.editor = new Editor({
@@ -40,6 +43,17 @@ export class HashtagInputComponent implements OnInit, OnDestroy {
         this.checkForHashtag(editor);
       },
     });
+  }
+
+  ngAfterViewInit() {
+    this.editor.view.dom.style.outline = 'none';
+
+    const editorContent = document.querySelector('.editor-content');
+    if (editorContent) {
+      this.editorClickSubscription = fromEvent(editorContent, 'click').subscribe(() => {
+        this.editor.commands.focus('start');
+      });
+    }
   }
 
   private checkForHashtag(editor: Editor) {
@@ -101,5 +115,9 @@ export class HashtagInputComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.editor.destroy();
+
+    if (this.editorClickSubscription) {
+      this.editorClickSubscription.unsubscribe();
+    }
   }
 }
