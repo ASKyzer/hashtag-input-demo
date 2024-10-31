@@ -1,0 +1,24 @@
+.editor-container {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-height: 200px;
+}
+
+.editor-content {
+  padding: 1rem;
+  min-height: 200px;
+}
+
+.ProseMirror {
+  min-height: 200px;
+  height: 100%;
+  outline: none;
+}
+
+.ProseMirror p.is-empty::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
