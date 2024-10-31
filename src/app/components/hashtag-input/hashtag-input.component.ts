@@ -18,6 +18,7 @@ export class HashtagInputComponent implements OnInit, OnDestroy {
   filteredTags: string[] = [];
 
   private availableTags = SUGGESTED_HASHTAGS;
+  private selectedTags: string[] = [];
 
   ngOnInit() {
     this.editor = new Editor({
@@ -52,11 +53,20 @@ export class HashtagInputComponent implements OnInit, OnDestroy {
 
     if (match) {
       const query = match[1].toLowerCase();
-      this.filteredTags = this.availableTags.filter((tag) => tag.toLowerCase().startsWith(query)).slice(0, 5);
+      this.filteredTags = this.getSuggestions(query);
       this.showSuggestions = this.filteredTags.length > 0;
     } else {
       this.showSuggestions = false;
     }
+  }
+
+  getSuggestions(query: string) {
+    const matchingTags = this.availableTags.filter((tag) => {
+      const isAlreadySelected = this.editor?.getHTML().includes(`#${tag}`);
+      return !isAlreadySelected && tag.toLowerCase().startsWith(query.toLowerCase());
+    });
+
+    return matchingTags;
   }
 
   insertHashtag(tag: string) {
@@ -79,6 +89,14 @@ export class HashtagInputComponent implements OnInit, OnDestroy {
     }
 
     this.showSuggestions = false;
+  }
+
+  selectItem(item: any) {
+    this.selectedTags.push(item);
+  }
+
+  handleDelete(tag: string) {
+    this.selectedTags = this.selectedTags.filter((t) => t !== tag);
   }
 
   ngOnDestroy() {
