@@ -1,3 +1,9 @@
 <div class="editor-container">
   <div #editorElement class="editor-content"></div>
+  <app-hashtag-suggestions
+    [suggestions]="filteredTags"
+    [isVisible]="showSuggestions"
+    (tagSelected)="insertHashtag($event)"
+  >
+  </app-hashtag-suggestions>
 </div>
