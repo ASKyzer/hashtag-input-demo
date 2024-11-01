@@ -72,7 +72,7 @@ export class CreatePostComponent {
    * Updates the content when the editor content changes
    */
   onEditorUpdate() {
-    this.content = this.postContent.editor.getText();
+    this.content = this.postContent.editor.getHTML();
   }
 
   /**
@@ -97,7 +97,7 @@ export class CreatePostComponent {
 
     const postsNumber = this.posts?.length;
     const newPost: Post = {
-      content: this.content,
+      content: this.postContent.editor.getHTML(),
       username: 'askyzer',
       avatarUrl: 'https://github.com/askyzer.png',
       timestamp: new Date().toISOString(),
