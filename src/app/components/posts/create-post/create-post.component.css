@@ -33,11 +33,10 @@
 
 .create-post-title {
   font-size: 1.5rem;
-  font-weight: 400;
+  font-weight: 300;
 }
 
-.cancel-button,
-.post-button {
+.cancel-button {
   background: none;
   border: none;
   color: var(--secondary-lightest);
@@ -45,15 +44,18 @@
   cursor: pointer;
 }
 
-.post-button:disabled {
-  color: var(--primary-light);
-  cursor: not-allowed;
+.create-post-header-actions {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--secondary-lightest);
+  margin-left: 18px;
 }
 
 .post-input {
-  border-left: 1px solid var(--primary);
+  border-left: 1px solid var(--secondary-light);
   margin-left: 18px;
   padding-left: 28px;
+  margin-right: 18px;
 }
 
 .post-actions {
@@ -89,4 +91,32 @@
 
 .username {
   font-weight: bold;
+}
+
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--primary-light);
+  padding: 1.5rem 0 1rem 0;
+}
+
+.post-button {
+  background-color: var(--primary-darker);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: var(--secondary-lightest);
+  border: 1px solid var(--primary-dark);
+  font-size: 1.2rem;
+}
+
+.post-button:hover:not(:disabled) {
+  background-color: var(--primary-dark);
+}
+
+.post-button:disabled {
+  color: var(--primary-light);
+  cursor: not-allowed;
 }

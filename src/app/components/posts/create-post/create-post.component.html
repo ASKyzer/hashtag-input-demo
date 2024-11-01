@@ -6,7 +6,7 @@
   <div class="create-post-header">
     <button class="cancel-button" (click)="closeModal()">Cancel</button>
     <h2 class="create-post-title">Say something...</h2>
-    <button (click)="handlePostClick()" class="post-button" [disabled]="!content.trim()">Post</button>
+    <div class="create-post-header-actions"><i class="fa-regular fa-address-book"></i></div>
   </div>
 
   <div class="create-post-content">
@@ -45,6 +45,10 @@
           width="24"
         />
       </div>
+    </div>
+    <div class="post-footer">
+      <p>Anyone can reply & quote</p>
+      <button (click)="handlePostClick()" class="post-button" [disabled]="!content.trim()">Post</button>
     </div>
   </div>
 </div>
