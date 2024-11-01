@@ -48,7 +48,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class HashtagSuggestionsComponent {
   @Input() suggestions: string[] = [];
-  @Input() selectedItem: number = 0;
   @Input() isVisible: boolean = false;
   @Output() tagSelected = new EventEmitter<string>();
 

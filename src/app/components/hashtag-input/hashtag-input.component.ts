@@ -19,6 +19,19 @@ import { Plugin } from 'prosemirror-state';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 import { Subscription } from 'rxjs';
 
+/**
+ * HashtagInputComponent
+ *
+ * A rich text editor component that provides hashtag functionality with real-time suggestions.
+ * Built using TipTap editor with ProseMirror extensions for hashtag highlighting and handling.
+ *
+ * Features:
+ * - Real-time hashtag suggestions
+ * - Hashtag highlighting
+ * - Keyboard navigation support
+ * - Position-aware suggestion dropdown
+ * - Tag tracking and filtering
+ */
 @Component({
   selector: 'app-hashtag-input',
   standalone: true,
@@ -40,22 +53,52 @@ import { Subscription } from 'rxjs';
   styleUrl: './hashtag-input.component.css',
 })
 export class HashtagInputComponent implements OnDestroy, AfterViewInit {
+  /** List of all available hashtags */
   allTags = SUGGESTED_HASHTAGS;
+
+  /** Initial content for the editor */
   @Input() content!: string;
+
+  /** Reference to the editor DOM element */
   @ViewChild('editorElement') editorElement!: ElementRef;
+
+  /** TipTap editor instance */
   editor!: Editor;
+
+  /** Currently filtered suggestions based on input */
   filteredTags: string[] = [];
+
+  /** Controls whether the editor is editable */
   @Input() isEditable = true;
+
+  /** Controls visibility of suggestions dropdown */
   showSuggestions = false;
+
+  /** Position coordinates for suggestions dropdown */
   suggestionPosition: { x: number; y: number } = { x: 0, y: 0 };
+
+  /** References to suggestion items for keyboard navigation */
   @ViewChildren('tagItem') tagItems!: QueryList<ElementRef>;
+
+  /** Set of hashtags currently used in the editor */
   usedTags: Set<string> = new Set();
 
+  /** Subscription for editor click events */
   private editorClickSubscription: Subscription;
+
+  /** Currently selected tags */
   private selectedTags: string[] = [];
 
+  /** Emits when editor content is updated */
   @Output() update = new EventEmitter<void>();
 
+  /**
+   * TipTap extension for hashtag highlighting and handling
+   * Provides:
+   * - Tab key navigation for suggestions
+   * - Enter key completion
+   * - Visual highlighting of hashtags
+   */
   HashtagHighlight = Extension.create({
     name: 'hashtagHighlight',
     addProseMirrorPlugins: () => [
@@ -120,6 +163,9 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
     ],
   });
 
+  /**
+   * Initializes the TipTap editor with necessary extensions and configurations
+   */
   ngAfterViewInit() {
     this.editor = new Editor({
       autofocus: true,
@@ -140,6 +186,13 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
     this.editor.view.dom.style.outline = 'none';
   }
 
+  /**
+   * Handles hashtag input in real-time
+   * - Updates used tags
+   * - Filters suggestions
+   * - Updates suggestion position
+   * @param editor The TipTap editor instance
+   */
   handleHashtagInput(editor: Editor) {
     this.updateUsedTags(editor);
 
@@ -165,6 +218,10 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Updates the set of used hashtags based on editor content
+   * @param editor The TipTap editor instance
+   */
   updateUsedTags(editor: Editor) {
     const content = editor.state.doc.textContent;
     const usedTagsSet = new Set(
@@ -176,6 +233,10 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
     this.usedTags = usedTagsSet;
   }
 
+  /**
+   * Handles tag selection from typing
+   * @param tag The selected hashtag
+   */
   selectTag(tag: string) {
     const { from, to } = this.editor.state.selection;
     const currentLine = this.editor.state.doc.textBetween(Math.max(0, from - 100), from, '\n');
@@ -191,6 +252,11 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
     this.showSuggestions = false;
   }
 
+  /**
+   * Filters suggestions based on input query
+   * @param query The search query
+   * @returns Filtered list of hashtag suggestions
+   */
   getSuggestions(query: string) {
     const matchingTags = this.allTags.filter((tag) => {
       const isAlreadySelected = this.editor?.getHTML().includes(`#${tag}`);
@@ -201,6 +267,10 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
     return matchingTags;
   }
 
+  /**
+   * Handles hashtag insertion from suggestions dropdown
+   * @param tag The selected hashtag
+   */
   insertHashtag(tag: string) {
     const currentText = this.editor.state.doc.textBetween(
       Math.max(0, this.editor.state.selection.from - 100),
@@ -223,24 +293,47 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
     this.showSuggestions = false;
   }
 
+  /**
+   * Adds an item to selected tags
+   * @param item The tag to select
+   */
   selectItem(item: any) {
     this.selectedTags.push(item);
   }
 
+  /**
+   * Focuses the editor
+   * @param event Mouse event that triggered focus
+   */
   focusEditor(event: MouseEvent) {
     this.editor.commands.focus();
   }
 
+  /**
+   * Removes a tag from selected tags
+   * @param tag The tag to remove
+   */
   handleDelete(tag: string) {
     this.selectedTags = this.selectedTags.filter((t) => t !== tag);
   }
 
+  /**
+   * Cleanup on component destruction
+   * - Destroys editor instance
+   * - Unsubscribes from observables
+   */
   ngOnDestroy() {
     this.editor.destroy();
 
     if (this.editorClickSubscription) this.editorClickSubscription.unsubscribe();
   }
 
+  /**
+   * Updates the position of suggestions dropdown
+   * Ensures dropdown stays within viewport bounds
+   * @param from Cursor position
+   * @param hashtagLength Length of current hashtag
+   */
   private updateSuggestionPosition(from: number, hashtagLength: number) {
     const coords = this.editor.view.coordsAtPos(from - hashtagLength);
     const editorRect = this.editorElement.nativeElement.getBoundingClientRect();

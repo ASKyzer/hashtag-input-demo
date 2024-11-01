@@ -34,7 +34,6 @@ describe('HashtagSuggestionsComponent', () => {
   /** Verify initial state of component properties */
   it('should initialize with default values', () => {
     expect(component.suggestions).toEqual([]);
-    expect(component.selectedItem).toBe(0);
     expect(component.isVisible).toBe(false);
   });
 
