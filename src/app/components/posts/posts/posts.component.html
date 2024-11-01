@@ -1,1 +1,15 @@
-<p>posts works!</p>
+<div class="posts-container">
+  <div class="posts-container-header">
+    <img class="user-avatar" src="https://github.com/askyzer.png" alt="User Avatar" />
+    <div (click)="openCreatePostModal()" class="posts-container-header-info">
+      <p class="posts-container-header-title">Say something...</p>
+      <button class="create-post-button">Post</button>
+    </div>
+  </div>
+
+  <div class="post-container">
+    @for (post of posts; track post.id) {
+    <app-post [post]="post" />
+    }
+  </div>
+</div>

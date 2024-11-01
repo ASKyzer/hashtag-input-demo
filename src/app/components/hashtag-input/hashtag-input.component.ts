@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  Input,
   OnDestroy,
   Output,
   QueryList,
@@ -40,9 +41,11 @@ import { Subscription } from 'rxjs';
 })
 export class HashtagInputComponent implements OnDestroy, AfterViewInit {
   allTags = SUGGESTED_HASHTAGS;
+  @Input() content!: string;
   @ViewChild('editorElement') editorElement!: ElementRef;
   editor!: Editor;
   filteredTags: string[] = [];
+  @Input() isEditable = true;
   showSuggestions = false;
   suggestionPosition: { x: number; y: number } = { x: 0, y: 0 };
   @ViewChildren('tagItem') tagItems!: QueryList<ElementRef>;
@@ -126,7 +129,8 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
           onEnter: (editor: Editor) => this.updateUsedTags(editor),
         }),
       ],
-      content: '',
+      editable: this.isEditable,
+      content: this.content || '',
       onUpdate: ({ editor }) => {
         this.handleHashtagInput(editor);
         this.update.emit();

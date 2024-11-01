@@ -1,0 +1,20 @@
+<div class="post">
+  <img [src]="post.avatarUrl" alt="{{ post.username }}'s avatar" class="avatar" />
+  <div class="post-content">
+    <div class="post-header">
+      <div class="post-info">
+        <h3 class="username">{{ post.username }}</h3>
+        <span class="timestamp">{{ post.timestamp }}</span>
+      </div>
+    </div>
+
+    <app-hashtag-input [content]="post.content" [isEditable]="false" />
+
+    <img *ngIf="post.imageUrl" [src]="post.imageUrl" alt="Post image" class="post-image" />
+    <div class="post-actions">
+      <span class="action"><i class="fa-regular fa-heart"></i> {{ post.likes }}</span>
+      <span class="action"><i class="fa-regular fa-comment"></i> {{ post.comments }}</span>
+      <span class="action"><i class="fa-regular fa-share-from-square"></i> {{ post.shares }}</span>
+    </div>
+  </div>
+</div>
