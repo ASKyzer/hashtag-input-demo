@@ -25,6 +25,7 @@
 }
 
 .username {
+  color: var(--secondary-lighter);
   font-size: 1em;
   font-weight: bold;
   margin: 0;

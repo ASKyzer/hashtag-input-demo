@@ -53,7 +53,7 @@
   padding: 12px 20px;
   border-radius: 16px;
   cursor: pointer;
-  color: var(--secondary-lightest);
+  color: var(--secondary-lighter);
   border: 1px solid var(--primary-dark);
   font-size: 1.25em;
 }

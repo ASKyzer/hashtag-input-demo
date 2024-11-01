@@ -24,6 +24,7 @@ import { Post } from '@interfaces/post.interface';
             />
           </svg>
         </div>
+        <button class="create-post-button" (click)="openModal()"><i class="fa-solid fa-plus"></i></button>
       </div>
       <app-posts (showCreatePostModal)="openModal()" />
     </div>
@@ -42,6 +43,7 @@ import { Post } from '@interfaces/post.interface';
         justify-content: center;
         max-width: 1200px;
         margin: 0 auto;
+        position: relative;
       }
 
       .title {
@@ -60,6 +62,25 @@ import { Post } from '@interfaces/post.interface';
         margin-left: 0.5rem;
         margin-top: 11px;
         cursor: pointer;
+      }
+
+      .create-post-button {
+        background-color: var(--primary-darker);
+        border: none;
+        padding: 12px 24px;
+        border-radius: 12px;
+        cursor: pointer;
+        color: var(--secondary-lighter);
+        border: 1px solid var(--primary-dark);
+        font-size: 3rem;
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 1000;
+      }
+
+      .create-post-button:hover {
+        background-color: var(--primary-dark);
       }
     `,
   ],
