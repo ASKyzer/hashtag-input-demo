@@ -1,7 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap'); /* You can add global styles to this file, and also import other style files */
 
 :root {
-  --hashtag-color: #3b82f6;
+  --hashtag-color: #ff0999;
+  --primary-lightest: #e5f4e6;
+  --primary-lighter: #a6d6ab;
+  --primary-light: #6cb37d;
+  --primary: #026402;
+  --primary-dark: #024818;
+  --primary-darker: #033220;
+  --primary-darkest: #00210f;
+  --secondary-lightest: #ffe7ee;
+  --secondary-lighter: #ffc3d4;
+  --secondary-light: #ffb7c6;
+  --secondary: #e78fac;
+  --secondary-dark: #d7789f;
+  --secondary-darker: #b76284;
+  --secondary-darkest: #8e4b69;
 }
 
 *,
