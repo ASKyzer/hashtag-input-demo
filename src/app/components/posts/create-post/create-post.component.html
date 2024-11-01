@@ -1,0 +1,51 @@
+@if (showModal) {
+<div class="overlay" (click)="handleOverlayClick()"></div>
+
+} @if (showModal) {
+<div class="create-post-modal">
+  <div class="create-post-header">
+    <button class="cancel-button" (click)="closeModal()">Cancel</button>
+    <h2 class="create-post-title">Say something...</h2>
+    <button class="post-button" [disabled]="!content.trim()">Post</button>
+  </div>
+
+  <div class="create-post-content">
+    <div class="user-info">
+      <img class="user-avatar" src="https://github.com/askyzer.png" alt="User Avatar" />
+      <span class="username">askyzer</span>
+    </div>
+
+    <div class="post-content">
+      <div class="post-input">
+        <app-hashtag-input #postContent (update)="onEditorUpdate()"></app-hashtag-input>
+      </div>
+      <div class="post-actions">
+        <img
+          (click)="handleActionItemClick('image')"
+          class="post-action-icon"
+          src="assets/icons/image-gallery.png"
+          alt="Image"
+          height="24"
+          width="24"
+        />
+        <img
+          (click)="handleActionItemClick('gif')"
+          class="post-action-icon"
+          src="assets/icons/file.png"
+          alt="GIF"
+          height="24"
+          width="24"
+        />
+        <img
+          (click)="handleActionItemClick('gps')"
+          class="post-action-icon"
+          src="assets/icons/gps.png"
+          alt="Location Icon"
+          height="24"
+          width="24"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+}

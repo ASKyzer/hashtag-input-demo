@@ -49,4 +49,5 @@ body {
   line-height: 1.5;
   font-family: 'Poppins', 'Roboto', Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
+  background-color: var(--primary-darkest);
 }

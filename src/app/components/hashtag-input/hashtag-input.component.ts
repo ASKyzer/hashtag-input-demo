@@ -1,5 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnDestroy,
+  Output,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { HashtagSuggestionsComponent } from '@components/hashtag-suggestions/hashtag-suggestions.component';
 import { SUGGESTED_HASHTAGS } from '@constants/hashtags.constants';
 import { Editor, Extension } from '@tiptap/core';
@@ -40,6 +50,8 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
 
   private editorClickSubscription: Subscription;
   private selectedTags: string[] = [];
+
+  @Output() update = new EventEmitter<void>();
 
   HashtagHighlight = Extension.create({
     name: 'hashtagHighlight',
@@ -117,6 +129,7 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
       content: '',
       onUpdate: ({ editor }) => {
         this.handleHashtagInput(editor);
+        this.update.emit();
       },
     });
     this.editor.view.dom.style.outline = 'none';
@@ -137,9 +150,7 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
           .filter((tag) => !this.usedTags.has(tag))
           .filter((tag) => tag.toLowerCase().startsWith(hashtagText.toLowerCase()));
 
-        if (!this.showSuggestions) {
-          this.updateSuggestionPosition(from, hashtagText.length);
-        }
+        this.updateSuggestionPosition(from, hashtagText.length);
         this.showSuggestions = this.filteredTags.length > 0;
       } else {
         this.showSuggestions = false;
