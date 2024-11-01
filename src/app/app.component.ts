@@ -76,6 +76,8 @@ import { Post } from '@interfaces/post.interface';
         position: fixed;
         right: 24px;
         bottom: 24px;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3), 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 0 30px 0 rgba(0, 0, 0, 0.1),
+          0 0 40px 0 rgba(0, 0, 0, 0.05);
         z-index: 1000;
       }
 
