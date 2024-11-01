@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { HashtagInputComponent } from './components/hashtag-input/hashtag-input.component';
+import { HashtagInputComponent } from '@components/hashtag-input/hashtag-input.component';
 
 @Component({
   selector: 'app-root',
