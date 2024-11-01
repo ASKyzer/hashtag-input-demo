@@ -20,7 +20,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         max-height: 200px;
         overflow-y: auto;
-        width: 200px;
+        min-width: 300px;
+        width: fit-content;
         z-index: 1000;
       }
 
