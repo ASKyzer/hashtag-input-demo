@@ -10,7 +10,7 @@
   min-height: calc(100vh - 100px);
   height: 100%;
   border: 1px solid var(--primary-dark);
-  border-radius: 8px 8px 0 0;
+  border-radius: 24px 24px 0 0;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3), 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 0 30px 0 rgba(0, 0, 0, 0.1),
     0 0 40px 0 rgba(0, 0, 0, 0.05);
 }
@@ -51,7 +51,7 @@
   background-color: var(--primary-darker);
   border: none;
   padding: 12px 20px;
-  border-radius: 8px;
+  border-radius: 16px;
   cursor: pointer;
   color: var(--secondary-lightest);
   border: 1px solid var(--primary-dark);
