@@ -5,7 +5,8 @@
   align-items: start;
   justify-content: start;
   gap: 16px;
-  width: 640px;
+  width: 100%;
+  max-width: 640px;
   background-color: var(--primary-darker);
   min-height: calc(100vh - 100px);
   height: 100%;
