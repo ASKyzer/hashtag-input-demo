@@ -8,12 +8,23 @@ describe('PostComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PostComponent]
-    })
-    .compileComponents();
-    
+      imports: [PostComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(PostComponent);
     component = fixture.componentInstance;
+
+    component.post = {
+      id: 1,
+      username: 'testUser',
+      content: 'Test content',
+      avatarUrl: '',
+      timestamp: new Date().toISOString(),
+      likes: 0,
+      comments: 0,
+      shares: 0,
+    };
+
     fixture.detectChanges();
   });
 
