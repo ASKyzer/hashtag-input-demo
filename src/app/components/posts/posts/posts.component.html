@@ -9,7 +9,9 @@
 
   <div class="post-container">
     @for (post of posts; track post.id) {
-    <app-post [post]="post" (onPostClick)="handlePostClick($event)" />
+    <div class="post">
+      <app-post [post]="post" (onPostClick)="handlePostClick($event)" (deletePost)="handleDeletePost($event)" />
+    </div>
     }
   </div>
 </div>

@@ -6,6 +6,17 @@
         <h3 class="username">{{ post.username }}</h3>
         <span class="timestamp">{{ post.timestamp | timeAgo }}</span>
       </div>
+      <div class="post-menu">
+        <button class="menu-button" (click)="toggleDropdown($event)">
+          <i class="fa-solid fa-ellipsis"></i>
+        </button>
+        <div class="dropdown-menu" *ngIf="isDropdownOpen">
+          <div class="dropdown-item" (click)="handleDelete(post.id)">
+            <i class="fa-regular fa-trash-can"></i>
+            Delete
+          </div>
+        </div>
+      </div>
     </div>
 
     <app-hashtag-input [content]="post.content" [isEditable]="false" />

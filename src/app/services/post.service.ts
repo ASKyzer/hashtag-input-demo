@@ -10,6 +10,13 @@ export const createPost = (post: Post) => {
   postsSubject.next(updatedPosts.sort((a, b) => b.id - a.id));
 };
 
+export const deletePost = (id: number) => {
+  const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+  const updatedPosts = posts.filter((post: Post) => post.id !== id);
+  localStorage.setItem('posts', JSON.stringify(updatedPosts));
+  postsSubject.next(updatedPosts.sort((a, b) => b.id - a.id));
+};
+
 export const getPosts = (): Post[] => {
   const posts = JSON.parse(localStorage.getItem('posts') || '[]');
   const sortedPosts = posts.sort((a, b) => b.id - a.id);

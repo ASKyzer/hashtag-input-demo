@@ -4,7 +4,7 @@ import { HashtagInputComponent } from '@components/hashtag-input/hashtag-input.c
 import { PostComponent } from '@components/posts/post/post.component';
 import { DUMMY_POSTS } from '@constants/posts.constants';
 import { Post } from '@interfaces/post.interface';
-import { getPosts, getPostsObservable } from '@services/post.service';
+import { deletePost, getPosts, getPostsObservable } from '@services/post.service';
 
 @Component({
   selector: 'app-posts',
@@ -34,7 +34,10 @@ export class PostsComponent implements OnInit {
   }
 
   handlePostClick(event: any) {
-    console.log('🚀 ~ PostsComponent ~ handlePostClick ~ post:', event);
     getPosts();
+  }
+
+  handleDeletePost(id: number) {
+    deletePost(id);
   }
 }
