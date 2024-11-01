@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HashtagInputComponent } from '@components/hashtag-input/hashtag-input.component';
 import { CreatePostComponent } from '@components/posts/create-post/create-post.component';
 import { PostsComponent } from '@components/posts/posts/posts.component';
+import { DUMMY_POSTS } from '@constants/posts.constants';
+import { Post } from '@interfaces/post.interface';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +27,7 @@ import { PostsComponent } from '@components/posts/posts/posts.component';
       </div>
       <app-posts (showCreatePostModal)="openModal()" />
     </div>
-    <app-create-post #createPostComponent />
+    <app-create-post #createPostComponent [posts]="posts" />
   </main>`,
   styles: [
     `
@@ -62,8 +64,19 @@ import { PostsComponent } from '@components/posts/posts/posts.component';
     `,
   ],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   @ViewChild('createPostComponent') createPostComponent!: CreatePostComponent;
+  posts: Post[] = [];
+
+  ngOnInit(): void {
+    const dummyPosts = DUMMY_POSTS;
+
+    if (!localStorage.getItem('posts')) {
+      localStorage.setItem('posts', JSON.stringify(dummyPosts));
+    }
+
+    this.posts = JSON.parse(localStorage.getItem('posts')!);
+  }
 
   openModal() {
     this.createPostComponent.openModal();

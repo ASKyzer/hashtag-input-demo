@@ -1,5 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { HashtagInputComponent } from '@components/hashtag-input/hashtag-input.component';
+import { Post } from '@interfaces/post.interface';
+import { createPost } from '@services/post.service';
 
 @Component({
   selector: 'app-create-post',
@@ -10,6 +12,8 @@ import { HashtagInputComponent } from '@components/hashtag-input/hashtag-input.c
 })
 export class CreatePostComponent {
   @ViewChild('postContent') postContent!: HashtagInputComponent;
+  @Input() posts!: Post[];
+  @Output() onPostClick = new EventEmitter<boolean>();
   showModal = false;
   content = '';
 
@@ -17,8 +21,8 @@ export class CreatePostComponent {
     this.showModal = true;
   }
 
-  closeModal() {
-    if (this.content.trim()) {
+  closeModal(isPost: boolean = false) {
+    if (this.content.trim() && !isPost) {
       const confirmClose = confirm('You have unsaved content. Are you sure you want to close?');
       if (!confirmClose) return;
     }
@@ -37,5 +41,25 @@ export class CreatePostComponent {
   handleActionItemClick(action: string) {
     console.log(action, 'icon clicked');
     // TODO: Implement action
+  }
+
+  handlePostClick() {
+    if (!this.content.trim()) return;
+
+    const postsNumber = this.posts?.length;
+    const newPost: Post = {
+      content: this.content,
+      username: 'askyzer',
+      avatarUrl: 'https://github.com/askyzer.png',
+      timestamp: new Date().toISOString(),
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      id: postsNumber + 1,
+    };
+
+    createPost(newPost);
+    this.closeModal(true);
+    this.onPostClick.emit(true);
   }
 }

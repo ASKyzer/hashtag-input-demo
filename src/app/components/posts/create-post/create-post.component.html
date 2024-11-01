@@ -6,7 +6,7 @@
   <div class="create-post-header">
     <button class="cancel-button" (click)="closeModal()">Cancel</button>
     <h2 class="create-post-title">Say something...</h2>
-    <button class="post-button" [disabled]="!content.trim()">Post</button>
+    <button (click)="handlePostClick()" class="post-button" [disabled]="!content.trim()">Post</button>
   </div>
 
   <div class="create-post-content">

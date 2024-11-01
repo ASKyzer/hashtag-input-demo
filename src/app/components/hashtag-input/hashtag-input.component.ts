@@ -122,6 +122,7 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     this.editor = new Editor({
+      autofocus: true,
       element: this.editorElement.nativeElement,
       extensions: [
         StarterKit,

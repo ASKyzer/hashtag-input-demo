@@ -25,7 +25,10 @@
     "baseUrl": "./",
     "paths": {
       "@components/*": ["./src/app/components/*"],
-      "@constants/*": ["./src/app/constants/*"]
+      "@constants/*": ["./src/app/constants/*"],
+      "@interfaces/*": ["src/app/interfaces/*"],
+      "@services/*": ["./src/app/services/*"],
+      "@pipes/*": ["./src/app/pipes/*"]
     }
   },
   "angularCompilerOptions": {
