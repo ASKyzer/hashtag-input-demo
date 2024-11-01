@@ -6,12 +6,18 @@
 }
 
 .editor-content {
-  padding: 1rem;
+  padding: 0 1rem 1rem;
   min-height: 200px;
+  position: relative;
 }
 
 .ProseMirror {
   min-height: 200px;
   height: 100%;
   outline: none;
+}
+
+.suggestions {
+  position: absolute;
+  z-index: 1000;
 }

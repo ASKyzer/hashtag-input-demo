@@ -12,7 +12,20 @@ import { Subscription } from 'rxjs';
   selector: 'app-hashtag-input',
   standalone: true,
   imports: [CommonModule, HashtagSuggestionsComponent],
-  templateUrl: './hashtag-input.component.html',
+  template: `<div (click)="focusEditor($event)" class="editor-container">
+    <div #editorElement class="editor-content"></div>
+    <app-hashtag-suggestions
+      class="suggestions"
+      [suggestions]="filteredTags"
+      [isVisible]="showSuggestions"
+      (tagSelected)="insertHashtag($event)"
+      [ngStyle]="{
+        left: suggestionPosition.x + 'px',
+        top: suggestionPosition.y + 'px'
+      }"
+    >
+    </app-hashtag-suggestions>
+  </div>`,
   styleUrl: './hashtag-input.component.css',
 })
 export class HashtagInputComponent implements OnDestroy, AfterViewInit {
@@ -212,8 +225,8 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
     if (this.editorClickSubscription) this.editorClickSubscription.unsubscribe();
   }
 
-  private updateSuggestionPosition(cursorPosition: number, hashtagLength: number) {
-    const coords = this.editor.view.coordsAtPos(cursorPosition - hashtagLength);
+  private updateSuggestionPosition(from: number, hashtagLength: number) {
+    const coords = this.editor.view.coordsAtPos(from - hashtagLength);
     const editorRect = this.editorElement.nativeElement.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const suggestionsWidth = 300;
@@ -221,10 +234,7 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
     let xPos = coords.left - editorRect.left - 24;
 
     if (coords.left + suggestionsWidth > viewportWidth) {
-      xPos = Math.min(
-        xPos,
-        viewportWidth - suggestionsWidth - editorRect.left - 16 // 16px margin from right edge
-      );
+      xPos = Math.min(xPos, viewportWidth - suggestionsWidth - editorRect.left - 8);
     }
 
     xPos = Math.max(0, xPos);
