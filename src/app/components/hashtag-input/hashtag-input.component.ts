@@ -11,13 +11,13 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { HashtagSuggestionsComponent } from '@components/hashtag-suggestions/hashtag-suggestions.component';
 import { SUGGESTED_HASHTAGS } from '@constants/hashtags.constants';
 import { Editor, Extension } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import { Plugin } from 'prosemirror-state';
 import { Decoration, DecorationSet } from 'prosemirror-view';
-import { Subscription } from 'rxjs';
+import { fromEvent, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 /**
  * HashtagInputComponent
@@ -35,20 +35,34 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-hashtag-input',
   standalone: true,
-  imports: [CommonModule, HashtagSuggestionsComponent],
+  imports: [CommonModule],
   template: `<div (click)="focusEditor($event)" class="editor-container">
     <div #editorElement class="editor-content"></div>
-    <app-hashtag-suggestions
-      class="suggestions"
-      [suggestions]="filteredTags"
-      [isVisible]="showSuggestions"
-      (tagSelected)="insertHashtag($event)"
+    @if (showSuggestions) {
+    <div
+      class="suggestions-dropdown"
+      role="listbox"
+      [attr.aria-label]="'Hashtag suggestions'"
       [ngStyle]="{
         left: suggestionPosition.x + 'px',
         top: suggestionPosition.y + 'px'
       }"
     >
-    </app-hashtag-suggestions>
+      @for (tag of filteredTags; track tag; let i = $index) {
+      <div
+        #tagItem
+        role="option"
+        class="suggestion-item"
+        [class.selected]="i === selectedIndex"
+        [attr.aria-selected]="i === selectedIndex"
+        (click)="selectTag(tag)"
+        tabindex="-1"
+      >
+        #{{ tag }}
+      </div>
+      }
+    </div>
+    }
   </div>`,
   styleUrl: './hashtag-input.component.css',
 })
@@ -71,6 +85,9 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
   /** Controls whether the editor is editable */
   @Input() isEditable = true;
 
+  /** Index of currently selected suggestion */
+  selectedIndex = -1;
+
   /** Controls visibility of suggestions dropdown */
   showSuggestions = false;
 
@@ -83,14 +100,20 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
   /** Set of hashtags currently used in the editor */
   usedTags: Set<string> = new Set();
 
+  /** Emits when editor content is updated */
+  @Output() update = new EventEmitter<void>();
+
+  /** Subscription for document click events */
+  private documentClickSubscription!: Subscription;
+
   /** Subscription for editor click events */
   private editorClickSubscription: Subscription;
 
+  /** Subscription for keyboard events */
+  private keyboardSubscription!: Subscription;
+
   /** Currently selected tags */
   private selectedTags: string[] = [];
-
-  /** Emits when editor content is updated */
-  @Output() update = new EventEmitter<void>();
 
   /**
    * TipTap extension for hashtag highlighting and handling
@@ -105,13 +128,7 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
       new Plugin({
         props: {
           handleKeyDown: (view, event) => {
-            if (event.key === 'Tab' && this.showSuggestions) {
-              event.preventDefault();
-
-              if (this.tagItems.first) this.tagItems.first.nativeElement.focus();
-
-              return true;
-            }
+            // TODO: Add support for arrow keys and tab key
             if (event.key === 'Enter') {
               const { state } = view;
               const { from } = state.selection;
@@ -184,6 +201,52 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
       },
     });
     this.editor.view.dom.style.outline = 'none';
+
+    this.keyboardSubscription = fromEvent<KeyboardEvent>(document, 'keydown')
+      .pipe(filter(() => this.showSuggestions))
+      .subscribe((event) => {
+        switch (event.key) {
+          case 'Tab':
+            if (this.selectedIndex === -1) {
+              this.selectedIndex = 0;
+              this.focusSelectedItem();
+              event.preventDefault();
+            }
+            break;
+          case 'ArrowDown':
+            event.preventDefault();
+            this.selectedIndex = Math.min(this.selectedIndex + 1, this.filteredTags.length - 1);
+            this.focusSelectedItem();
+            break;
+          case 'ArrowUp':
+            event.preventDefault();
+            this.selectedIndex = Math.max(this.selectedIndex - 1, 0);
+            this.focusSelectedItem();
+            break;
+          case 'Enter':
+            if (this.selectedIndex >= 0) {
+              event.preventDefault();
+              this.selectTag(this.filteredTags[this.selectedIndex]);
+            }
+            break;
+          case 'Escape':
+            this.showSuggestions = false;
+            this.selectedIndex = -1;
+            break;
+        }
+      });
+
+    // Add document click listener
+    this.documentClickSubscription = fromEvent<MouseEvent>(document, 'click').subscribe((event) => {
+      const target = event.target as HTMLElement;
+      const isInsideSuggestions = target.closest('.suggestions-dropdown');
+      const isHashtagInput = target.closest('.editor-container');
+
+      if (!isInsideSuggestions && !isHashtagInput) {
+        this.showSuggestions = false;
+        this.selectedIndex = -1;
+      }
+    });
   }
 
   /**
@@ -210,6 +273,7 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
 
         this.updateSuggestionPosition(from, hashtagText.length);
         this.showSuggestions = this.filteredTags.length > 0;
+        this.selectedIndex = -1;
       } else {
         this.showSuggestions = false;
       }
@@ -326,6 +390,8 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
     this.editor.destroy();
 
     if (this.editorClickSubscription) this.editorClickSubscription.unsubscribe();
+    if (this.keyboardSubscription) this.keyboardSubscription.unsubscribe();
+    if (this.documentClickSubscription) this.documentClickSubscription.unsubscribe();
   }
 
   /**
@@ -351,5 +417,12 @@ export class HashtagInputComponent implements OnDestroy, AfterViewInit {
       x: xPos,
       y: coords.bottom - editorRect.top + 16,
     };
+  }
+
+  private focusSelectedItem() {
+    const items = this.tagItems?.toArray();
+    if (items && items[this.selectedIndex]) {
+      items[this.selectedIndex].nativeElement.focus();
+    }
   }
 }

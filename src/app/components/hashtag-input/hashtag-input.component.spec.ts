@@ -5,7 +5,6 @@
  * using a TipTap-based text editor.
  */
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
-import { HashtagSuggestionsComponent } from '@components/hashtag-suggestions/hashtag-suggestions.component';
 import { SUGGESTED_HASHTAGS } from '@constants/hashtags.constants';
 import { Editor } from '@tiptap/core';
 import { HashtagInputComponent } from './hashtag-input.component';
@@ -20,7 +19,7 @@ describe('HashtagInputComponent', () => {
    */
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HashtagInputComponent, HashtagSuggestionsComponent],
+      imports: [HashtagInputComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HashtagInputComponent);
